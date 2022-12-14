@@ -1,1 +1,200 @@
-
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct nodetype
+{
+	int data;
+	struct nodetype *add;
+}node;
+void insertatBeg(node **s,int item)
+{
+	node *ptr;
+	ptr=(node*)malloc(sizeof(node));
+	ptr->data=item;
+	ptr->add=*s;
+	*s=ptr;	
+}
+void insertatEnd(node **s,int item)
+{
+	node *ptr,*last;
+	ptr=(node*)malloc(sizeof(node));
+	ptr->data=item;
+	ptr->add=NULL;
+	if(*s==NULL)
+	{
+	*s=ptr;
+    }
+	else
+	{
+		last=*s;
+		while(last->add!=NULL)
+		{
+		
+		last=last->add;
+		last->add=ptr;
+	    }
+	}
+}
+node *searchLL(node *s,int key)
+{
+	while(s!=NULL && s->data!=key)
+	s=s->add;
+	return s;
+}
+void insertAfterLoc(node **s,int item,int after)
+{
+	node *ptr,*loc;
+	loc=searchLL(*s,after);
+	if(loc==NULL)
+	{
+		printf("\n location not found");
+		return;
+	}
+	ptr=(node*)malloc(sizeof(node));
+	ptr->data=item;
+	ptr->add=loc->add;
+	loc->add=ptr;
+}
+void deleteatBeg(node **s)
+{
+	node *temp;
+	temp=*s;
+	*s=(*s)->add;
+	free(temp);
+}
+void deleteatEnd(node **s)
+{
+	node *temp;
+	temp=*s;
+	while(temp->add->add!=NULL)
+	{
+		temp=temp->add;
+	}
+	free(temp->add);
+	temp->add=NULL;
+	
+}
+void deleteatPP(node **s,int pos)
+{
+	node *head,*temp;
+	head=*s;
+	while((pos-2)>0)
+	{
+		head=head->add;
+	}
+	temp=head->add;
+	head->add=head->add->add;
+	free(temp);
+}
+void printN(node *s)
+{
+	if(s==NULL)
+	{
+		printf("Linked list is empty");
+		return;
+	}
+	while(s!=NULL)
+	{
+		printf("%d ",s->data);
+		s=s->add;
+	}
+}
+void middleLL(node **s)
+{
+	if(*s==NULL)
+	{
+		printf("\n LINKED LIST IS EMPTY");
+	    return;
+	}
+	node *slow,*fast;
+    slow=*s;
+    fast=*s;
+    while(fast->add!=NULL && fast!=NULL)
+    {
+    	slow=slow->add;
+    	fast=fast->add->add;
+	}
+	printf("\n MIDDLE OF LINKED LIST=%d",slow->data);
+}
+void nthfromEnd(node *s,int n)
+{
+	int i,last=0;
+	node *temp=s;
+	while(temp!=NULL)
+	{
+		temp=temp->add;
+		last++;
+	}
+	if(last<n)
+	return;
+	temp=s;
+	for(i=1;i<last-n+1;i++)
+	temp=temp->add;
+	printf("%d",temp->data);
+}
+int main()
+{
+	int item,choice,after,pos,n;
+	node *head;
+	head=NULL;
+	while(1)
+	{
+		printf("\n...Linked List Menu....\n");
+		printf("\n1. Insert at beg");
+		printf("\n2. Insert at end");
+		printf("\n3. Insert after loc");
+		printf("\n4. delete at beg");
+		printf("\n5. delete at end");
+		printf("\n6. delete at PP");
+		printf("\n7. middle of LL");
+		printf("\n8. find nth node from end");
+		printf("\n9. Print ");
+		printf("\n10. Exit");
+		printf("\nEnter your choice=");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:
+			    printf("\nEnter item=");
+				scanf("%d",&item);
+				insertatBeg(&head,item);
+				break;
+			case 2:
+			    printf("\nEnter item=");
+				scanf("%d",&item);
+				insertatEnd(&head,item);
+				break;
+			case 3:
+				printf("Enter item=");
+				scanf("%d",&item);
+				printf("Insert element=");
+				scanf("%d",&after);
+				insertAfterLoc(&head,item,after);
+				break;
+			case 4:
+				deleteatBeg(&head);
+				break;
+			case 5:
+				deleteatEnd(&head);
+				break;
+			case 6:
+				printf("\nEnter item=");
+				scanf("%d",&item);
+				deleteatPP(&head,item);
+				break;
+			case 7:
+				middleLL(&head);
+				break;
+			case 8:
+				printf("enter position=");
+				scanf("%d",&n);
+				nthfromEnd(head,n);
+				break;
+			case 9:
+				printN(head);
+				break;
+			default:
+				exit(1);
+			        
+		}
+	}
+}
